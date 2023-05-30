@@ -1,0 +1,8 @@
+name : TEST
+version: '${version}'
+main : github.rainbowmori.test.TEST
+api-version: 1.19
+author: rainbowmori
+load: POSTWORLD
+depend : [ProtocolLib,RainbowAPI]
+prefix : TEST

@@ -1,0 +1,10 @@
+ItemSkin:
+  - material: STONE_HOE
+    skins:
+      - model : 1
+        money : 1000
+        data:
+          uuid: true
+          #TODO JsonAPI
+      - model : 2
+        money : 2000

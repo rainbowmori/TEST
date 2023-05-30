@@ -1,0 +1,78 @@
+plugins {
+    id 'java'
+}
+
+group = 'github.rainbowmori'
+version = '1.0.0'
+
+def targetJavaVersion = 17
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release = targetJavaVersion
+    }
+}
+
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'papermc-repo'
+        url = 'https://repo.papermc.io/repository/maven-public/'
+    }
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+
+    maven { url = 'https://repo.dmulloy2.net/repository/public/' }
+
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    compileOnly 'io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT'
+
+    compileOnly "com.github.MilkBowl:VaultAPI:1.7"
+    compileOnly 'com.comphenix.protocol:ProtocolLib:5.0.0'
+
+    implementation files(projectDir.getParentFile().toString() + '\\RainbowAPI\\build\\libs\\RainbowAPI.jar')
+}
+
+def buildFileName = "${project.name}-${project.version}.jar"
+
+def multipleDirectory = [projectDir.getParentFile().getParentFile().toString() +'\\OfroPluginCreateServer\\plugins']
+
+tasks.register('copyJar'){
+    doLast {
+        multipleDirectory.each { outputDir ->
+            copy {
+                from "$buildDir\\libs\\$buildFileName"
+                into outputDir
+            }
+        }
+    }
+}
+
+build.finalizedBy copyJar
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor(0,'seconds')
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
