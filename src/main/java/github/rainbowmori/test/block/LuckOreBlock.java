@@ -1,9 +1,10 @@
-package github.rainbowmori.test;
+package github.rainbowmori.test.block;
 
 import com.google.gson.JsonObject;
 import github.rainbowmori.rainbowapi.object.customblock.CustomBlock;
 import github.rainbowmori.rainbowapi.object.customblock.CustomModelBlock;
 import github.rainbowmori.rainbowapi.util.Util;
+import github.rainbowmori.test.item.LuckOreItem;
 import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -22,27 +23,28 @@ public class LuckOreBlock extends CustomModelBlock {
   public LuckOreBlock(Location location, JsonObject data) {
     super(location, data);
     uuid = UUID.fromString(data.get("uuid").getAsString());
-    EffectBlock effectBlock = CustomBlock.blockCache.computeGetCache(uuid, new EffectBlock(uuid));
-    if (effectBlock.hasLuckOre) {
-      remove();
+    EffectBlocks effectBlocks = CustomBlock.blockCache.computeGetCache(uuid, new EffectBlocks(uuid));
+    if (effectBlocks.hasLuckOre) {
+      super.clearData(getLocation());
+      silentRemove();
       return;
     }
-    effectBlock.hasLuckOre = true;
+    effectBlocks.hasLuckOre = true;
   }
 
   public LuckOreBlock(Location location, Player player) {
     super(location, player);
     uuid = player.getUniqueId();
-    EffectBlock effectBlock = CustomBlock.blockCache.computeGetCache(uuid, new EffectBlock(uuid));
-    if (effectBlock.hasLuckOre) {
+    EffectBlocks effectBlocks = CustomBlock.blockCache.computeGetCache(uuid, new EffectBlocks(uuid));
+    if (effectBlocks.hasLuckOre) {
       dropItem(location);
       Util.send(player,"<red>LuckOreBlockはすでに設置しています(二つ以上は設置できません)");
-      remove();
-      //TODO ここremove()でclearData()もよばれてるからhasLuckOreがFalseになって設置できちゃうな
+      super.clearData(getLocation());
+      silentRemove();
       return;
     }
     Util.send(player, "<yellow>これで鉱石を掘って確率で増えます");
-    effectBlock.hasLuckOre = true;
+    effectBlocks.hasLuckOre = true;
   }
 
   @Override
@@ -61,7 +63,7 @@ public class LuckOreBlock extends CustomModelBlock {
   @Override
   public void clearData(Location location) {
     super.clearData(location);
-    CustomBlock.blockCache.computeGetCache(uuid, new EffectBlock(uuid)).hasLuckOre = false;
+    CustomBlock.blockCache.computeGetCache(uuid, new EffectBlocks(uuid)).hasLuckOre = false;
   }
 
   @Override

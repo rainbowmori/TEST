@@ -1,10 +1,11 @@
-package github.rainbowmori.test;
+package github.rainbowmori.test.item;
 
 import github.rainbowmori.rainbowapi.object.cutomitem.CoolityItem;
 import github.rainbowmori.rainbowapi.object.cutomitem.CustomItem;
 import github.rainbowmori.rainbowapi.object.cutomitem.cooldown.CooldownItem;
 import github.rainbowmori.rainbowapi.util.ItemBuilder;
 import github.rainbowmori.rainbowapi.util.Util;
+import github.rainbowmori.test.TEST;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;

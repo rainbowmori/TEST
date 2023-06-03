@@ -1,9 +1,10 @@
-package github.rainbowmori.test;
+package github.rainbowmori.test.item;
 
 import github.rainbowmori.rainbowapi.object.cutomitem.CustomItem;
 import github.rainbowmori.rainbowapi.object.cutomitem.cooldown.CooldownItem;
 import github.rainbowmori.rainbowapi.util.ItemBuilder;
 import github.rainbowmori.rainbowapi.util.Util;
+import github.rainbowmori.test.TEST;
 import java.util.UUID;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

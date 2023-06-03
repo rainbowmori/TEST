@@ -1,32 +1,21 @@
 package github.rainbowmori.test.materialshiop;
 
 import github.rainbowmori.rainbowapi.object.ui.button.MenuButton;
-import github.rainbowmori.rainbowapi.util.ItemBuilder;
-import java.util.ArrayList;
+import github.rainbowmori.rainbowapi.object.ui.button.RedirectItemButton;
+import github.rainbowmori.test.TEST;
 import java.util.List;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public enum ShopCategory {
-  STONE(1,new ItemBuilder(Material.STONE).name("<gray>石系"),new ArrayList<MaterialInfo>(){{
-    add();
-  }}),
+public class ShopCategory {
 
-  MATERIAL_SEARCH(50,);
-
-  private final int slot;
-  private final ItemStack itemStack;
-  private final List<MaterialInfo> materials;
   private final MenuButton<?> button;
 
-  ShopCategory(int slot, ItemStack itemStack, List<MaterialInfo> materials) {
-    this.slot = slot;
-    this.itemStack = itemStack;
-    this.materials = materials;
+  public ShopCategory(ItemStack itemStack, List<MaterialInfo> materials) {
+    this.button = new RedirectItemButton<>(itemStack, () -> new ItemValueShopPage(TEST.getPlugin(), itemStack.displayName(), materials).getInventory());
   }
 
-  public int getSlot() {
-    return slot;
+  public ShopCategory(MenuButton<?> button) {
+    this.button = button;
   }
 
   public MenuButton<?> getButton() {

@@ -2,6 +2,7 @@ package github.rainbowmori.test;
 
 import github.rainbowmori.rainbowapi.object.customblock.CustomBlock;
 import github.rainbowmori.rainbowapi.util.Util;
+import github.rainbowmori.test.block.EffectBlocks;
 import java.util.Collection;
 import java.util.UUID;
 import org.bukkit.block.Block;
@@ -19,7 +20,7 @@ public class Events implements Listener {
     if (block.getType().name().contains("_ORE")) {
       Player player = e.getPlayer();
       UUID uuid = player.getUniqueId();
-      if (CustomBlock.blockCache.computeGetCache(uuid,new EffectBlock(uuid)).hasLuckOre) {
+      if (CustomBlock.blockCache.computeGetCache(uuid,new EffectBlocks(uuid)).hasLuckOre) {
         e.setDropItems(false);
         Collection<ItemStack> drops = block.getDrops(
             player.getInventory().getItemInMainHand(), player);

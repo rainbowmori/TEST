@@ -1,7 +1,8 @@
-package github.rainbowmori.test;
+package github.rainbowmori.test.item;
 
 import github.rainbowmori.rainbowapi.object.cutomitem.CustomItem;
 import github.rainbowmori.rainbowapi.util.ItemBuilder;
+import github.rainbowmori.test.block.LuckOreBlock;
 import java.util.Optional;
 import java.util.UUID;
 import org.bukkit.Material;

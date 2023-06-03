@@ -1,4 +1,4 @@
-package github.rainbowmori.test;
+package github.rainbowmori.test.item;
 
 import github.rainbowmori.rainbowapi.object.cutomitem.CustomItem;
 import github.rainbowmori.rainbowapi.object.cutomitem.cooldown.CooldownItem;
