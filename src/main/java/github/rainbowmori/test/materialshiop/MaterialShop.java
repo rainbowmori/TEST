@@ -58,13 +58,15 @@ public class MaterialShop {
 
 
   private static final Map<Integer, ShopCategory> category = new HashMap<>() {{
+
+
     put(1, new ShopCategory(new ItemBuilder(Material.STONE).name("<gray>石系").build(),
         append(new ArrayList<>() {{
           add(new MaterialInfo(Material.STONE, 200, 100));
           add(new MaterialInfo(Material.ANDESITE, 103120, 200));
-          add(new MaterialInfo(Material.OBSIDIAN, 131200, 200));
-          add(new MaterialInfo(Material.BAMBOO, 100, 203120));
         }})));
+
+
 
 
 
