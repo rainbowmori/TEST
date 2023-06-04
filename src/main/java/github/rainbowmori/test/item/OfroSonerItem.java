@@ -2,6 +2,7 @@ package github.rainbowmori.test.item;
 
 import github.rainbowmori.rainbowapi.object.cutomitem.CustomItem;
 import github.rainbowmori.rainbowapi.object.cutomitem.cooldown.CooldownItem;
+import github.rainbowmori.rainbowapi.object.nbtapi.NBT;
 import github.rainbowmori.rainbowapi.util.ItemBuilder;
 import github.rainbowmori.rainbowapi.util.Util;
 import github.rainbowmori.test.TEST;
@@ -25,6 +26,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class OfroSonerItem extends CustomItem implements CooldownItem {
 
+  private static final String stick = "|||";
+  private final boolean isUsed;
+
   public OfroSonerItem() {
     this(new ItemBuilder(Material.COMPASS).changeMeta(
             (Consumer<CompassMeta>) meta -> meta.setLodestoneTracked(false)).name("<red>OfroSoner")
@@ -33,22 +37,30 @@ public class OfroSonerItem extends CustomItem implements CooldownItem {
 
   public OfroSonerItem(ItemStack item) {
     super(item);
+    this.isUsed = NBT.get(getItem(), nbt -> nbt.getCompound(nbtKey).getBoolean("isUsed"));
   }
 
   @Override
   public void rightClick(PlayerInteractEvent e) {
     Player player = e.getPlayer();
     UUID uuid = player.getUniqueId();
-    if (CooldownItem.hasCooldown(uuid,"OfroAlertItem")) {
-      TEST.getPlugin().getPrefixUtil().send(player,"<red>OfroAlertと同時使用はできません");
+    if (CooldownItem.hasCooldown(uuid, "OfroAlertItem")) {
+      TEST.getPlugin().getPrefixUtil().send(player, "<red>OfroAlertと同時使用はできません");
       return;
     }
     if (hasCooldown(uuid)) {
-      TEST.getPlugin().getPrefixUtil().send(player,"<red>すでにOfroSonerを使用しています");
+      TEST.getPlugin().getPrefixUtil()
+          .send(player, isUsed ? "<red>すでにOfroSonerのクールダウン中です" : "<red>すでにOfroSonerを使用しています");
+      return;
+    }
+    if (isUsed) {
       return;
     }
     addCooldown(uuid, 180);
-    Util.send(player,"<green>OfroSonerの機能が開始しました");
+    NBT.modify(getItem(), nbt -> {
+      nbt.getCompound(nbtKey).setBoolean("isUsed", true);
+    });
+    Util.send(player, "<green>OfroSonerの機能が開始しました");
   }
 
   @Override
@@ -56,15 +68,28 @@ public class OfroSonerItem extends CustomItem implements CooldownItem {
     if (!hasCooldown(uuid)) {
       return Optional.of(getReadyMessage(uuid));
     }
+    if (isUsed) {
+      if (getIntCooldown(uuid) > 0) {
+        return getBar(uuid);
+      }
+      NBT.modify(getItem(), nbt -> {
+        nbt.getCompound(nbtKey).setBoolean("isUsed", false);
+      });
+      addCooldown(uuid, 600);
+    }
+    return Optional.of(getHasCooldownMessage(uuid));
+  }
+
+  private Optional<String> getBar(UUID uuid) {
     Player player = Objects.requireNonNull(Bukkit.getPlayer(uuid));
     Location eyeLocation = player.getEyeLocation();
     World world = eyeLocation.getWorld();
     Optional<Player> min = Bukkit.getOnlinePlayers()
         .stream().map(p -> (Player) p).filter(p -> !p.equals(player)
-            && !CooldownItem.hasCooldown(p.getUniqueId(),"HideAmpouleItem")
+            && !CooldownItem.hasCooldown(p.getUniqueId(), "HideAmpouleItem")
             && p.getWorld().equals(world))
         .min(Comparator.comparingDouble(o -> eyeLocation.distanceSquared(o.getEyeLocation())));
-    int cooldown = getCooldown(uuid).intValue();
+    int cooldown = getIntCooldown(uuid);
     if (min.isEmpty()) {
       return Optional.of("<red>残り" + cooldown + "秒");
     }
@@ -100,14 +125,12 @@ public class OfroSonerItem extends CustomItem implements CooldownItem {
     int v = (int) ((degree + 112) / 15);
 
     String builder = IntStream.range(1, 14)
-        .mapToObj(i -> v == i ? "<red>" + stick + "<white>" : i == 7 ? "|<blue>|<white>|" : stick )
+        .mapToObj(i -> v == i ? "<red>" + stick + "<white>" : i == 7 ? "|<blue>|<white>|" : stick)
         .collect(Collectors.joining("", "<white>", ""));
 
     return Optional.of(" ".repeat(9 + String.valueOf(cooldown).length())
         + builder + " <red>残り" + cooldown + "秒");
   }
-
-  private static final String stick = "|||";
 
   @Override
   public @NotNull String getIdentifier() {
