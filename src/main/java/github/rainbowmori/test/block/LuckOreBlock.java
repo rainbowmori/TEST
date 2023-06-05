@@ -17,6 +17,7 @@ public class LuckOreBlock extends CustomModelBlock {
 
   public LuckOreBlock(Location location) {
     super(location);
+    remove();
     throw new RuntimeException("このブロックはプレイヤーの情報を必須とします");
   }
 
