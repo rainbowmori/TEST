@@ -4,8 +4,8 @@ import github.rainbowmori.rainbowapi.object.cutomitem.CustomItem;
 import github.rainbowmori.rainbowapi.util.ItemBuilder;
 import github.rainbowmori.test.block.LuckOreBlock;
 import java.util.Optional;
-import java.util.UUID;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +35,7 @@ public class LuckOreItem extends CustomItem {
   }
 
   @Override
-  public @NotNull Optional<String> getActionBarMessage(UUID uuid) {
+  public @NotNull Optional<String> getActionBarMessage(Player player) {
     return Optional.empty();
   }
 }

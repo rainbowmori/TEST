@@ -24,32 +24,27 @@ tasks.withType(JavaCompile).configureEach {
 
 repositories {
     mavenCentral()
-    maven {
-        name = 'papermc-repo'
-        url = 'https://repo.papermc.io/repository/maven-public/'
-    }
+    maven {url = "https://repo.papermc.io/repository/maven-public/"}
+    maven {url = "https://repo.dmulloy2.net/repository/public/"}
+    maven {url = "https://jitpack.io"}
     maven {
         name = 'sonatype'
         url = 'https://oss.sonatype.org/content/groups/public/'
     }
-
-    maven { url = 'https://repo.dmulloy2.net/repository/public/' }
-
-    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT'
+    compileOnly("io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT")
+    compileOnly("com.comphenix.protocol:ProtocolLib:5.0.0")
 
     compileOnly "com.github.MilkBowl:VaultAPI:1.7"
-    compileOnly 'com.comphenix.protocol:ProtocolLib:5.0.0'
 
     implementation files(projectDir.getParentFile().toString() + '\\RainbowAPI\\build\\libs\\RainbowAPI.jar')
 }
 
 def buildFileName = "${project.name}-${project.version}.jar"
 
-def multipleDirectory = [projectDir.getParentFile().getParentFile().toString() +'\\OfroPluginCreateServer\\plugins']
+def multipleDirectory = [projectDir.getParentFile().getParentFile().toString() +'\\LightTestServer\\plugins']
 
 tasks.register('copyJar'){
     doLast {
